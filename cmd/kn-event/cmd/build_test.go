@@ -92,7 +92,7 @@ func (ec eventChecks) unmarshalData(bytes []byte) map[string]interface{} {
 
 func newEventChecks(t *testing.T) eventChecks {
 	e := cloudevents.NewEvent()
-	e.SetType("dev.knative.cli.plugin.event.generic")
+	e.SetType(buildTypeFlagDefault)
 	e.SetID(uuid.New().String())
 	assert.NoError(t, e.SetData(cloudevents.ApplicationJSON, map[string]string{}))
 	e.SetSource(fmt.Sprintf("%s/%s", internal.PluginName, internal.Version))

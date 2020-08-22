@@ -72,6 +72,7 @@ func init() {
 		"Output format. One of: human|json|yaml.",
 	)
 
+	rootCmd.AddCommand(buildCmd)
 	rootCmd.AddCommand(sendCmd)
 	rootCmd.AddCommand(versionCmd)
 }
