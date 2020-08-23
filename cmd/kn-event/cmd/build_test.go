@@ -3,23 +3,21 @@ package cmd
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"testing"
-	"time"
 
-	"github.com/cardil/kn-event/internal"
+	"github.com/cardil/kn-event/internal/event"
 	cloudevents "github.com/cloudevents/sdk-go/v2"
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestBuildSubCommandWithNoOptions(t *testing.T) {
-	performTestsOnBuildSubCommand(t, newCmdArgs("build"))
+	performTestsOnBuildSubCommand(t, newCmdArgs("build", "--output", "json"))
 }
 
 func TestBuildSubCommandWithComplexOptions(t *testing.T) {
 	performTestsOnBuildSubCommand(
 		t, newCmdArgs("build",
+			"--output", "json",
 			"--type", "org.example.ping",
 			"--id", "71830",
 			"--source", "/api/v1/ping",
@@ -38,6 +36,7 @@ func TestBuildSubCommandWithComplexOptions(t *testing.T) {
 					"email": "ksuszyns@example.com",
 				},
 				"ping": 123,
+				"active": true,
 				"ref":  "321",
 			}))
 		},
@@ -85,23 +84,13 @@ func (ec eventChecks) performEventChecks(out []byte) {
 }
 
 func (ec eventChecks) unmarshalData(bytes []byte) map[string]interface{} {
-	m := map[string]interface{}{}
-	assert.NoError(ec.t, json.Unmarshal(bytes, &m))
+	m, err := event.UnmarshalData(bytes)
+	assert.NoError(ec.t, err)
 	return m
 }
 
 func newEventChecks(t *testing.T) eventChecks {
-	e := cloudevents.NewEvent()
-	e.SetType(buildTypeFlagDefault)
-	e.SetID(uuid.New().String())
-	assert.NoError(t, e.SetData(cloudevents.ApplicationJSON, map[string]string{}))
-	e.SetSource(fmt.Sprintf("%s/%s", internal.PluginName, internal.Version))
-	e.SetTime(time.Now())
-	assert.NoError(t, e.Validate())
-	return eventChecks{
-		t:     t,
-		event: &e,
-	}
+	return eventChecks{t: t, event: event.NewDefault()}
 }
 
 type eventChecks struct {
