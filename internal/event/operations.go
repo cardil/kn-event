@@ -29,11 +29,12 @@ func CreateFromSpec(args *Spec) (*cloudevents.Event, error) {
 	// TODO(ksuszyns): replace with real code, at TDD "refactor".
 	_ = e.SetData(cloudevents.ApplicationJSON, map[string]interface{}{
 		"person": map[string]interface{}{
-			"name": "Chris",
+			"name":  "Chris",
 			"email": "ksuszyns@example.com",
 		},
-		"ping": 123.,
-		"ref":  "321",
+		"ping":   123.,
+		"ref":    "321",
+		"active": true,
 	})
 	return e, nil
 }
@@ -46,4 +47,11 @@ func UnmarshalData(bytes []byte) (map[string]interface{}, error) {
 		return nil, err
 	}
 	return m, nil
+}
+
+// AddField will add a field to the spec
+func (s *Spec) AddField(path string, val interface{}) {
+	s.Fields = append(s.Fields, FieldSpec{
+		Path: path, Value: val,
+	})
 }

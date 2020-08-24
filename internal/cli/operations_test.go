@@ -90,6 +90,7 @@ func TestCreateWithArgs(t *testing.T) {
 			"person.name=Chris",
 			"person.email=ksuszyns@example.com",
 			"ping=123",
+			"active=true",
 		},
 		RawFields: []string{"ref=321"},
 	}
@@ -105,10 +106,11 @@ func TestCreateWithArgs(t *testing.T) {
 		},
 		"ping": 123.,
 		"ref": "321",
+		"active": true,
 	}
 	actualData, err := event.UnmarshalData(actual.Data())
 	assert.NoError(t, err)
-	assert.Equal(t, expectedData, actualData)
+	assert.EqualValues(t, expectedData, actualData)
 	delta := 1_000_000.
 	assert.InDelta(t, time.Now().UnixNano(), actual.Time().UnixNano(), delta)
 }

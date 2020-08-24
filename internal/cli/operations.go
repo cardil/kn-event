@@ -1,7 +1,10 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/cardil/kn-event/internal/event"
@@ -14,22 +17,24 @@ func CreateWithArgs(args *EventArgs) (*cloudevents.Event, error) {
 		Type:      args.Type,
 		ID:        args.ID,
 		Source:    args.Source,
-		Fields:    make([]event.FieldSpec, len(args.Fields)),
-		RawFields: make([]event.FieldSpec, len(args.RawFields)),
+		Fields:    make([]event.FieldSpec, 0, len(args.Fields) + len(args.RawFields)),
 	}
-	// TODO(ksuszyns): replace with real code, at TDD "refactor".
-	spec.Fields = append(spec.Fields, event.FieldSpec{
-		Path: "person.name", Value: "Chris",
-	})
-	spec.Fields = append(spec.Fields, event.FieldSpec{
-		Path: "person.email", Value: "ksuszyns@example.com",
-	})
-	spec.Fields = append(spec.Fields, event.FieldSpec{
-		Path: "ping", Value: 123.,
-	})
-	spec.RawFields = append(spec.RawFields, event.FieldSpec{
-		Path: "ref", Value: "321",
-	})
+	for _, fieldAssigment := range args.Fields {
+		splitted := strings.SplitN(fieldAssigment, "=", 2)
+		path, value := splitted[0], splitted[1]
+		if boolVal, err := readAsBoolean(value); err == nil {
+			spec.AddField(path, boolVal)
+		} else if floatVal, err := readAsFloat64(value); err == nil {
+			spec.AddField(path, floatVal)
+		} else {
+			spec.AddField(path, value)
+		}
+	}
+	for _, fieldAssigment := range args.RawFields {
+		splitted := strings.SplitN(fieldAssigment, "=", 2)
+		path, value := splitted[0], splitted[1]
+		spec.AddField(path, value)
+	}
 	return event.CreateFromSpec(spec)
 }
 
@@ -99,4 +104,46 @@ data:
 `, event.Type(), event.Source(), event.ID(), formattedTime), nil
 	}
 	return "", fmt.Errorf("unsupported output mode: %v", output)
+}
+
+func readAsBoolean(in string) (bool, error) {
+	val, err := strconv.ParseBool(in)
+	// TODO(cardil): log error as it may be beneficial for debugging
+	if err != nil {
+		return false, err
+	}
+	text := fmt.Sprintf("%t", val)
+	if in == text {
+		return val, nil
+	}
+	return false, errors.New("not a boolean: " + in)
+}
+
+func readAsFloat64(in string) (float64, error) {
+	if intVal, err := readAsInt64(in); err == nil {
+		return float64(intVal), err
+	}
+	val, err := strconv.ParseFloat(in, 64)
+	// TODO(cardil): log error as it may be beneficial for debugging
+	if err != nil {
+		return -0, err
+	}
+	text := fmt.Sprintf("%f", val)
+	if in == text {
+		return val, nil
+	}
+	return -0, errors.New("not a float: " + in)
+}
+
+func readAsInt64(in string) (int64, error) {
+	val, err := strconv.ParseInt(in, 10, 64)
+	// TODO(cardil): log error as it may be beneficial for debugging
+	if err != nil {
+		return -0, err
+	}
+	text := fmt.Sprintf("%d", val)
+	if in == text {
+		return val, nil
+	}
+	return -0, errors.New("not an int: " + in)
 }
