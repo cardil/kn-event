@@ -2,6 +2,7 @@ package event
 
 import (
 	"encoding/json"
+	"strings"
 	"time"
 
 	cloudevents "github.com/cloudevents/sdk-go/v2"
@@ -21,22 +22,39 @@ func NewDefault() *cloudevents.Event {
 }
 
 // CreateFromSpec will create an event by parsing given args
-func CreateFromSpec(args *Spec) (*cloudevents.Event, error) {
+func CreateFromSpec(spec *Spec) (*cloudevents.Event, error) {
 	e := NewDefault()
-	e.SetID(args.ID)
-	e.SetSource(args.Source)
-	e.SetType(args.Type)
-	// TODO(ksuszyns): replace with real code, at TDD "refactor".
-	_ = e.SetData(cloudevents.ApplicationJSON, map[string]interface{}{
-		"person": map[string]interface{}{
-			"name":  "Chris",
-			"email": "ksuszyns@example.com",
-		},
-		"ping":   123.,
-		"ref":    "321",
-		"active": true,
-	})
+	e.SetID(spec.ID)
+	e.SetSource(spec.Source)
+	e.SetType(spec.Type)
+	m := map[string]interface{}{}
+	for _, fieldSpec := range spec.Fields {
+		err := updateMapWithSpec(m, fieldSpec)
+		if err != nil {
+			return nil, err
+		}
+	}
+	err := e.SetData(cloudevents.ApplicationJSON, m)
+	if err != nil {
+		return nil, err
+	}
 	return e, nil
+}
+
+func updateMapWithSpec(m map[string]interface{}, spec FieldSpec) error {
+	paths := strings.Split(spec.Path, ".")
+	curr := m
+	for i, p := range paths {
+		if i < len(paths)-1 {
+			if _, ok := curr[p]; !ok {
+				curr[p] = map[string]interface{}{}
+			}
+			curr = curr[p].(map[string]interface{})
+		} else {
+			curr[p] = spec.Value
+		}
+	}
+	return nil
 }
 
 // UnmarshalData will take bytes and unmarshall it as JSON to map structure
