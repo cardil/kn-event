@@ -24,6 +24,7 @@ func TestBuildSubCommandWithComplexOptions(t *testing.T) {
 			"--field", "person.name=Chris",
 			"--field", "person.email=ksuszyns@example.com",
 			"--field", "ping=123",
+			"--field", "active=true",
 			"--raw-field", "ref=321",
 		),
 		func(e *cloudevents.Event) {

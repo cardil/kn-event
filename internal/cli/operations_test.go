@@ -25,12 +25,12 @@ Context Attributes,
   datacontenttype: application/json
 Data,
   {
+    "active": true,
     "person": {
-      "name": "Chris",
-      "email": "ksuszyns@example.com"
+      "email": "ksuszyns@example.org",
+      "name": "Chris"
     },
     "ping": 123,
-    "active": true,
     "ref": "321"
   }`, event.DefaultSource), out)
 }
@@ -40,21 +40,21 @@ func TestPresentWithJson(t *testing.T) {
 	out, err := PresentWith(e, JSON)
 	assert.NoError(t, err)
 	assert.Equal(t, fmt.Sprintf(`{
-  "specversion": "1.0",
-  "type": "dev.knative.cli.plugin.event.generic",
-  "source": "%s",
-  "id": "99e4f4f6-08ff-4bff-acf1-47f61ded68c9",
-  "time": "2020-08-24T14:01:12.000601161Z",
-  "dataContentType": "application/json",
   "data": {
+    "active": true,
     "person": {
-      "name": "Chris",
-      "email": "ksuszyns@example.com"
+      "email": "ksuszyns@example.org",
+      "name": "Chris"
     },
     "ping": 123,
-    "active": true,
     "ref": "321"
-  }
+  },
+  "datacontenttype": "application/json",
+  "id": "99e4f4f6-08ff-4bff-acf1-47f61ded68c9",
+  "source": "%s",
+  "specversion": "1.0",
+  "time": "2020-08-24T14:01:12.000601161Z",
+  "type": "dev.knative.cli.plugin.event.generic"
 }`, event.DefaultSource), out)
 }
 
@@ -62,19 +62,19 @@ func TestPresentWithYaml(t *testing.T) {
 	e := exampleEvent(t)
 	out, err := PresentWith(e, YAML)
 	assert.NoError(t, err)
-	assert.Equal(t, fmt.Sprintf(`specversion: 1.0
-type: dev.knative.cli.plugin.event.generic
-source: %s
-id: 99e4f4f6-08ff-4bff-acf1-47f61ded68c9
-time: 2020-08-24T14:01:12.000601161Z
-dataContentType: application/x-yaml
-data:
-  person:
-    name: Chris
-    email: ksuszyns@example.com
-  ping: 123
+	assert.Equal(t, fmt.Sprintf(`data:
   active: true
-  ref: '321'
+  person:
+    email: ksuszyns@example.org
+    name: Chris
+  ping: 123
+  ref: "321"
+datacontenttype: application/json
+id: 99e4f4f6-08ff-4bff-acf1-47f61ded68c9
+source: %s
+specversion: "1.0"
+time: "2020-08-24T14:01:12.000601161Z"
+type: dev.knative.cli.plugin.event.generic
 `, event.DefaultSource), out)
 }
 
