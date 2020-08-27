@@ -34,7 +34,7 @@ func TestSendToAddress(t *testing.T) {
 	buf := bytes.NewBuffer([]byte{})
 	rootCmd.SetOut(buf)
 	assert.NoError(t, rootCmd.Execute())
-	out := string(buf.Bytes())
+	out := buf.String()
 	assert.Equal(t, "Event (ID: 654321) have been sent.\n", out)
 	assert.NotNil(t, ce)
 	assert.Equal(t, "654321", ce.ID())
