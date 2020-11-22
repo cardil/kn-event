@@ -10,6 +10,8 @@ var buildCmd = func() *cobra.Command {
 		Use:   "build",
 		Short: "Builds a CloudEvent and print it to stdout",
 		RunE: func(cmd *cobra.Command, args []string) error {
+			options.OutWriter = cmd.OutOrStdout()
+			options.ErrWriter = cmd.ErrOrStderr()
 			ce, err := cli.CreateWithArgs(eventArgs)
 			if err != nil {
 				return err

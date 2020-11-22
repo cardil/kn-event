@@ -1,28 +1,33 @@
 package cli
 
 import (
-	"context"
-	"fmt"
+	"net/url"
 
+	"github.com/cardil/kn-event/internal/event"
 	cloudevents "github.com/cloudevents/sdk-go/v2"
 )
 
 // Send will send CloudEvent to target.
-func Send(ce *cloudevents.Event, target *TargetArgs, options *Options) error {
-	c, err := cloudevents.NewDefaultClient()
+func Send(ce cloudevents.Event, target *TargetArgs, options *Options) error {
+	t, err := createTarget(target)
 	if err != nil {
 		return err
 	}
+	o := createOptions(options)
+	sender := event.NewSender(t, o)
+	return sender.Send(ce)
+}
 
-	// Set a target.
-	ctx := cloudevents.ContextWithTarget(context.Background(), target.URL)
-
-	// Send that Event.
-	if err := c.Send(ctx, *ce); cloudevents.IsUndelivered(err) {
-		return err
+func createTarget(args *TargetArgs) (*event.Target, error) {
+	if args.URL != "" {
+		u, err := url.Parse(args.URL)
+		if err != nil {
+			return nil, err
+		}
+		return &event.Target{
+			Type:   event.TargetTypeReachable,
+			URLVal: u,
+		}, nil
 	}
-
-	_, err = fmt.Fprintf(options.OutWriter,
-		"Event (ID: %s) have been sent.\n", ce.ID())
-	return err
+	return nil, event.ErrNotYetImplemented
 }

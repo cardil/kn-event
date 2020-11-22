@@ -3,16 +3,13 @@ package cli
 import (
 	"io"
 
+	"github.com/cardil/kn-event/internal/event"
 	"github.com/thediveo/enumflag"
 )
 
 // Options holds a general args for all commands.
 type Options struct {
-	// KnConfig holds kn configuration file (default: ~/.config/kn/config.yaml)
-	KnConfig string
-
-	// Kubeconfig holds kubectl configuration file (default: ~/.kube/config)
-	Kubeconfig string
+	event.KnPluginOptions
 
 	// Output define type of output commands should be producing.
 	Output OutputMode
@@ -20,9 +17,6 @@ type Options struct {
 	// Verbose tells does commands should display additional information about
 	// what's happening? Verbose information is printed on stderr.
 	Verbose bool
-
-	// LogHTTP tells if kn-event plugin should log HTTP requests it makes
-	LogHTTP bool
 
 	OutWriter io.Writer
 	ErrWriter io.Writer

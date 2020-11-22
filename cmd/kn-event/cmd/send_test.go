@@ -37,7 +37,7 @@ func TestSendToAddress(t *testing.T) {
 	rootCmd.SetOut(buf)
 	assert.NoError(t, rootCmd.Execute())
 	out := buf.String()
-	assert.Equal(t, "Event (ID: 654321) have been sent.\n", out)
+	assert.Contains(t, out, "Event (ID: 654321) have been sent.")
 	assert.NotNil(t, ce)
 	assert.Equal(t, "654321", ce.ID())
 	payload, err := event.UnmarshalData(ce.Data())

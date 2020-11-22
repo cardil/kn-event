@@ -19,7 +19,7 @@ var (
 				if err != nil {
 					return err
 				}
-				return cli.Send(ce, target, options)
+				return cli.Send(*ce, target, options)
 			},
 		}
 		addBuilderFlags(c)
@@ -33,13 +33,27 @@ var (
 			`Specify an addressable resource to send event to. This argument
 takes format kind:apiVersion:name for named resources or
 kind:apiVersion:labelKey1=value1,labelKey2=value2 for matching via a
-label selector. This option can't be used with --to-url option.'`,
+label selector. This option can't be used with --to-url option.`,
 		)
 		c.Flags().StringVarP(
 			&target.Namespace, "namespace", "n", "",
 			`Specify a namespace of addressable resource defined with --to
 option. If this option isn't specified a current context namespace will be used
-to find addressable resource. This option can't be used with --to-url option.'`,
+to find addressable resource. This option can't be used with --to-url option.`,
+		)
+		c.Flags().StringVar(
+			&target.Namespace, "sender-namespace", "",
+			`Specify a namespace of sender job to be created. While using --to
+option, event is send within a cluster. To do that kn-event uses a special Job
+that is deployed to cluster in namespace dictated by --sender-namespace. If
+this option isn't specified a current context namespace will be used. This
+option can't be used with --to-url option.`,
+		)
+		c.Flags().StringVar(
+			&target.Namespace, "addressable-uri", "/",
+			`Specify an URI of a target addressable resource. If this option
+isn't specified a '/' URI will be used. This option can't be used with 
+--to-url option.`,
 		)
 		return c
 	}()
