@@ -16,6 +16,7 @@ func createOptions(opts *Options) *event.Options {
 	if opts.Verbose {
 		zc = zap.NewDevelopmentConfig()
 	}
+	zc.EncoderConfig.EncodeTime = zapcore.RFC3339NanoTimeEncoder
 	var encoder zapcore.Encoder
 	switch opts.Output {
 	case HumanReadable:
@@ -185,6 +186,7 @@ func (y *yamlEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field) (
 		return nil, err
 	}
 	buf = buffer.NewPool().Get()
+	_, _ = buf.Write([]byte("---\n"))
 	_, err = buf.Write(bytes)
 	return buf, err
 }
