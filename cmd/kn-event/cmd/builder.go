@@ -6,9 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	eventArgs = &cli.EventArgs{}
-)
+var eventArgs = &cli.EventArgs{}
 
 func addBuilderFlags(c *cobra.Command) {
 	c.Flags().StringVarP(

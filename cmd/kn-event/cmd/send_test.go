@@ -30,6 +30,8 @@ func TestSendToAddress(t *testing.T) {
 		"--field", "person.name=Chris",
 		"--field", "person.email=ksuszyns@example.com",
 		"--field", "ping=123",
+		"--field", "active=true",
+		"--raw-field", "ref=321",
 	})
 	buf := bytes.NewBuffer([]byte{})
 	rootCmd.SetOut(buf)
@@ -45,6 +47,8 @@ func TestSendToAddress(t *testing.T) {
 			"name":  "Chris",
 			"email": "ksuszyns@example.com",
 		},
-		"ping": 123,
+		"ping":   123.,
+		"active": true,
+		"ref":    "321",
 	}, payload)
 }

@@ -13,7 +13,7 @@ import (
 	"github.com/ghodss/yaml"
 )
 
-// CreateWithArgs will create an event by parsing given args
+// CreateWithArgs will create an event by parsing given args.
 func CreateWithArgs(args *EventArgs) (*cloudevents.Event, error) {
 	spec := &event.Spec{
 		Type:   args.Type,
@@ -40,7 +40,7 @@ func CreateWithArgs(args *EventArgs) (*cloudevents.Event, error) {
 	return event.CreateFromSpec(spec)
 }
 
-// PresentWith will present an event with specified output
+// PresentWith will present an event with specified output.
 func PresentWith(e *cloudevents.Event, output OutputMode) (string, error) {
 	switch output {
 	case HumanReadable:
