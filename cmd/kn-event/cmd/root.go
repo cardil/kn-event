@@ -17,7 +17,7 @@ var outputModeIds = map[cli.OutputMode][]string{
 }
 
 var (
-	options = &cli.Options{}
+	options = &cli.OptionsArgs{}
 
 	rootCmd = &cobra.Command{
 		Use:     "event",
@@ -75,4 +75,9 @@ func init() {
 		&options.LogHTTP, "log-http", false,
 		"log http traffic",
 	)
+
+	rootCmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {
+		options.OutWriter = cmd.OutOrStdout()
+		options.ErrWriter = cmd.ErrOrStderr()
+	}
 }

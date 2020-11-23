@@ -67,8 +67,8 @@ type KnPluginOptions struct {
 	LogHTTP bool
 }
 
-// Options holds a general options.
-type Options struct {
+// Properties holds a general properties.
+type Properties struct {
 	KnPluginOptions
 	Log *zap.SugaredLogger
 }

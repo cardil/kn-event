@@ -7,8 +7,8 @@ import (
 	"github.com/thediveo/enumflag"
 )
 
-// Options holds a general args for all commands.
-type Options struct {
+// OptionsArgs holds a general args for all commands.
+type OptionsArgs struct {
 	event.KnPluginOptions
 
 	// Output define type of output commands should be producing.
@@ -33,9 +33,11 @@ type EventArgs struct {
 
 // TargetArgs holds args specific for even sending.
 type TargetArgs struct {
-	URL         string
-	Addressable string
-	Namespace   string
+	URL             string
+	Addressable     string
+	Namespace       string
+	SenderNamespace string
+	AddressableURI  string
 }
 
 // OutputMode is type of output to produce.

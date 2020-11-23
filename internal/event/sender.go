@@ -18,12 +18,12 @@ var (
 )
 
 // NewSender creates a new Sender.
-func NewSender(target *Target, options *Options) Sender {
+func NewSender(target *Target, options *Properties) Sender {
 	switch target.Type {
 	case TargetTypeReachable:
 		return &directSender{
-			url:     *target.URLVal,
-			Options: options,
+			url:        *target.URLVal,
+			Properties: options,
 		}
 	case TargetTypeAddressable:
 		return &inClusterSender{}
@@ -33,7 +33,7 @@ func NewSender(target *Target, options *Options) Sender {
 
 type directSender struct {
 	url url.URL
-	*Options
+	*Properties
 }
 
 func (d *directSender) Send(ce cloudevents.Event) error {

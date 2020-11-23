@@ -13,8 +13,6 @@ var (
 			Use:   "send",
 			Short: "Builds and sends a CloudEvent to recipient",
 			RunE: func(cmd *cobra.Command, args []string) error {
-				options.OutWriter = cmd.OutOrStdout()
-				options.ErrWriter = cmd.ErrOrStderr()
 				ce, err := cli.CreateWithArgs(eventArgs)
 				if err != nil {
 					return err
@@ -42,7 +40,7 @@ option. If this option isn't specified a current context namespace will be used
 to find addressable resource. This option can't be used with --to-url option.`,
 		)
 		c.Flags().StringVar(
-			&target.Namespace, "sender-namespace", "",
+			&target.SenderNamespace, "sender-namespace", "",
 			`Specify a namespace of sender job to be created. While using --to
 option, event is send within a cluster. To do that kn-event uses a special Job
 that is deployed to cluster in namespace dictated by --sender-namespace. If
@@ -50,11 +48,14 @@ this option isn't specified a current context namespace will be used. This
 option can't be used with --to-url option.`,
 		)
 		c.Flags().StringVar(
-			&target.Namespace, "addressable-uri", "/",
+			&target.AddressableURI, "addressable-uri", "/",
 			`Specify an URI of a target addressable resource. If this option
 isn't specified a '/' URI will be used. This option can't be used with 
 --to-url option.`,
 		)
+		c.PreRunE = func(cmd *cobra.Command, args []string) error {
+			return cli.ValidateTarget(target)
+		}
 		return c
 	}()
 )

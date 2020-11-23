@@ -31,7 +31,7 @@ func assertWithOutputMode(t *testing.T, mode cli.OutputMode) {
 		target := &cli.TargetArgs{
 			URL: serverURL.String(),
 		}
-		opts := &cli.Options{
+		opts := &cli.OptionsArgs{
 			Output:    mode,
 			OutWriter: &buf,
 		}
