@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/cardil/kn-event/internal/cli"
+	"github.com/cardil/kn-event/internal/configuration"
 	"github.com/spf13/cobra"
 )
 
@@ -17,6 +18,7 @@ var (
 				if err != nil {
 					return err
 				}
+				configuration.ConfigureSender()
 				return cli.Send(*ce, target, options)
 			},
 		}

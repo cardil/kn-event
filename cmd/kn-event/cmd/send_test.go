@@ -12,7 +12,7 @@ import (
 
 func TestSendToAddress(t *testing.T) {
 	buf := bytes.NewBuffer([]byte{})
-	ce, err := tests.WithCloudEventsServer(func(serverURL *url.URL) error {
+	ce, err := tests.WithCloudEventsServer(func(serverURL url.URL) error {
 		rootCmd.SetArgs([]string{
 			"send",
 			"--to-url", serverURL.String(),

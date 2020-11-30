@@ -12,6 +12,9 @@ func Send(ce cloudevents.Event, target *TargetArgs, options *OptionsArgs) error 
 		return err
 	}
 	o := options.WithLogger()
-	sender := event.NewSender(t, o)
+	sender, err := event.NewSender(t, o)
+	if err != nil {
+		return err
+	}
 	return sender.Send(ce)
 }

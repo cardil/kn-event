@@ -1,12 +1,16 @@
 package event
 
 import (
+	"errors"
 	"net/url"
 
 	cloudevents "github.com/cloudevents/sdk-go/v2"
 	"go.uber.org/zap"
 	duckv1 "knative.dev/pkg/apis/duck/v1"
 )
+
+// ErrNotYetImplemented is an error for not yet implemented code.
+var ErrNotYetImplemented = errors.New("not yet implemented")
 
 // Spec holds specification of event to be created.
 type Spec struct {
@@ -50,11 +54,6 @@ type Target struct {
 	AddressableVal *AddressableSpec
 }
 
-// Sender will send event to specified target.
-type Sender interface {
-	Send(ce cloudevents.Event) error
-}
-
 // KnPluginOptions holds options inherited to every Kn plugin.
 type KnPluginOptions struct {
 	// KnConfig holds kn configuration file (default: ~/.config/kn/config.yaml)
@@ -71,4 +70,11 @@ type KnPluginOptions struct {
 type Properties struct {
 	KnPluginOptions
 	Log *zap.SugaredLogger
+}
+
+// Sender will send event to specified target.
+type Sender interface {
+	// Send will send cloudevents.Event to configured target, or return an error
+	// if one occur.
+	Send(ce cloudevents.Event) error
 }

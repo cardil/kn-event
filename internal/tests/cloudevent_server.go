@@ -10,7 +10,7 @@ import (
 
 // WithCloudEventsServer is a testing utility that help by starting a CloudEvents
 // HTTP server which can catch a sent event.
-func WithCloudEventsServer(test func(serverURL *url.URL) error) (*cloudevents.Event, error) {
+func WithCloudEventsServer(test func(serverURL url.URL) error) (*cloudevents.Event, error) {
 	var ce *cloudevents.Event
 	receive := func(ctx context.Context, event cloudevents.Event) {
 		ce = &event
@@ -30,6 +30,6 @@ func WithCloudEventsServer(test func(serverURL *url.URL) error) (*cloudevents.Ev
 	if err != nil {
 		return nil, err
 	}
-	err = test(u)
+	err = test(*u)
 	return ce, err
 }
