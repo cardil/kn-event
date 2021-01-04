@@ -8,12 +8,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/phayes/freeport"
-
 	"github.com/cardil/kn-event/internal/event"
 	"github.com/cardil/kn-event/internal/sender"
 	"github.com/cardil/kn-event/internal/tests"
 	cloudevents "github.com/cloudevents/sdk-go/v2"
+	"github.com/phayes/freeport"
 )
 
 func TestDirectSenderSend(t *testing.T) {
@@ -21,7 +20,8 @@ func TestDirectSenderSend(t *testing.T) {
 		passing(t),
 		undelivered(t),
 	}
-	for _, tt := range testsCases {
+	for i := range testsCases {
+		tt := testsCases[i]
 		t.Run(tt.name, func(t *testing.T) {
 			tt.context(func(u url.URL) {
 				s, err := sender.New(&event.Target{
@@ -47,6 +47,7 @@ func TestDirectSenderSend(t *testing.T) {
 }
 
 func passing(t *testing.T) testCase {
+	t.Helper()
 	ce := newEvent("543562")
 	return testCase{
 		name:    "passing",
@@ -56,6 +57,7 @@ func passing(t *testing.T) testCase {
 }
 
 func undelivered(t *testing.T) testCase {
+	t.Helper()
 	ce := newEvent("1294756")
 	port, err := freeport.GetFreePort()
 	if err != nil {
@@ -82,6 +84,7 @@ func undelivered(t *testing.T) testCase {
 }
 
 func unexpectedError(t *testing.T, err error) {
+	t.Helper()
 	t.Error("Send(): unexpected error: ", err)
 }
 
@@ -95,6 +98,7 @@ func newEvent(id string) cloudevents.Event {
 }
 
 func sentEventIsValid(t *testing.T, want cloudevents.Event) func(hand func(u url.URL)) {
+	t.Helper()
 	return func(hand func(u url.URL)) {
 		sent, err := tests.WithCloudEventsServer(func(serverURL url.URL) error {
 			hand(serverURL)
@@ -108,6 +112,7 @@ func sentEventIsValid(t *testing.T, want cloudevents.Event) func(hand func(u url
 }
 
 func compareByJSON(t *testing.T, want interface{}, got interface{}) {
+	t.Helper()
 	prefix := ""
 	indent := "  "
 	wantJSON, err := json.MarshalIndent(want, prefix, indent)

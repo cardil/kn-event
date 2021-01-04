@@ -1,11 +1,11 @@
 package cmd
 
 import (
-	"hash/crc32"
 	"io"
 	"os"
 
 	"github.com/cardil/kn-event/internal/cli"
+	"github.com/cardil/kn-event/internal/cli/retcode"
 	"github.com/spf13/cobra"
 	"github.com/thediveo/enumflag"
 )
@@ -31,7 +31,7 @@ building, and parsing, all from command line.`,
 // Execute will execute the application.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		exitFunc(exitCode(err))
+		exitFunc(retcode.Calc(err))
 	}
 }
 
@@ -41,10 +41,6 @@ func SetOut(newOut io.Writer) {
 }
 
 var exitFunc = os.Exit
-
-func exitCode(err error) int {
-	return int(crc32.ChecksumIEEE([]byte(err.Error())))%254 + 1
-}
 
 func init() {
 	SetOut(os.Stdout)
