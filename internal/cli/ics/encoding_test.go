@@ -21,7 +21,7 @@ func TestEncodeDecode(t *testing.T) {
 	assert.NoError(t, err)
 	want := &ce
 
-	repr, err := ics.Encode(&ce)
+	repr, err := ics.Encode(ce)
 	assert.NoError(t, err)
 	assert.NotEmpty(t, repr)
 	got, err := ics.Decode(repr)

@@ -14,25 +14,25 @@ import (
 
 // Encode will encode a cloud event to ICS encoding form:
 // Base64(zlib(minimal JSON)).
-func Encode(ce *cloudevents.Event) (string, error) {
+func Encode(ce cloudevents.Event) (string, error) {
 	bb, err := json.Marshal(ce)
 	if err != nil {
-		return "", fmt.Errorf("20210104:203217: %w", err)
+		return "", fmt.Errorf("%w: %v", ErrCouldntEncode, err)
 	}
 	var b bytes.Buffer
 	encoder := base64.NewEncoder(base64.RawURLEncoding, &b)
 	w := zlib.NewWriter(encoder)
 	_, err = w.Write(bb)
 	if err != nil {
-		return "", fmt.Errorf("20210104:203302: %w", err)
+		return "", fmt.Errorf("%w: %v", ErrCouldntEncode, err)
 	}
 	err = w.Close()
 	if err != nil {
-		return "", fmt.Errorf("20210104:203321: %w", err)
+		return "", fmt.Errorf("%w: %v", ErrCouldntEncode, err)
 	}
 	err = encoder.Close()
 	if err != nil {
-		return "", fmt.Errorf("20210104:203334: %w", err)
+		return "", fmt.Errorf("%w: %v", ErrCouldntEncode, err)
 	}
 	return b.String(), nil
 }
@@ -43,16 +43,16 @@ func Decode(encoded string) (*cloudevents.Event, error) {
 	decoder := base64.NewDecoder(base64.RawURLEncoding, r)
 	reader, err := zlib.NewReader(decoder)
 	if err != nil {
-		return nil, fmt.Errorf("20210104:221412: %w", err)
+		return nil, fmt.Errorf("%w: %v", ErrCouldntDecode, err)
 	}
 	bb, err := ioutil.ReadAll(reader)
 	if err != nil {
-		return nil, fmt.Errorf("20210104:221831: %w", err)
+		return nil, fmt.Errorf("%w: %v", ErrCouldntDecode, err)
 	}
 	ce := &cloudevents.Event{}
 	err = json.Unmarshal(bb, ce)
 	if err != nil {
-		return nil, fmt.Errorf("20210104:222046: %w", err)
+		return nil, fmt.Errorf("%w: %v", ErrCouldntDecode, err)
 	}
 	return ce, nil
 }

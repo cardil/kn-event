@@ -5,22 +5,31 @@ import (
 	"net/url"
 
 	"github.com/cardil/kn-event/internal/event"
+	cloudevents "github.com/cloudevents/sdk-go/v2"
 	"github.com/kelseyhightower/envconfig"
 )
 
 // SendFromEnv will send an event based on a values stored in environmental
 // variables.
 func SendFromEnv() error {
+	c, err := configure()
+	if err != nil {
+		return err
+	}
+	return c.sender.Send(*c.ce)
+}
+
+func configure() (config, error) {
 	args := &Args{
 		Sink: "localhost",
 	}
 	err := envconfig.Process("K", args)
 	if err != nil {
-		return fmt.Errorf("20210104:200412: %w", err)
+		return config{}, fmt.Errorf("%w: %v", ErrCantConfigureICS, err)
 	}
 	u, err := url.Parse(args.Sink)
 	if err != nil {
-		return fmt.Errorf("20210104:200434: %w", err)
+		return config{}, fmt.Errorf("%w: %v", ErrCantConfigureICS, err)
 	}
 	target := &event.Target{
 		Type:   event.TargetTypeReachable,
@@ -28,11 +37,19 @@ func SendFromEnv() error {
 	}
 	s, err := event.SenderFactory(target)
 	if err != nil {
-		return fmt.Errorf("20210104:200451: %w", err)
+		return config{}, fmt.Errorf("%w: %v", ErrCantConfigureICS, err)
 	}
 	ce, err := Decode(args.Event)
 	if err != nil {
-		return fmt.Errorf("20210104:200521: %w", err)
+		return config{}, err
 	}
-	return s.Send(*ce)
+	return config{
+		sender: s,
+		ce:     ce,
+	}, nil
+}
+
+type config struct {
+	sender event.Sender
+	ce     *cloudevents.Event
 }
