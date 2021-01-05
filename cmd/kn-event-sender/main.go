@@ -8,7 +8,7 @@ import (
 	"github.com/cardil/kn-event/internal/configuration"
 )
 
-// ExitFunc will be used to exit Go process in case of error.	
+// ExitFunc will be used to exit Go process in case of error.
 var ExitFunc = os.Exit // nolint:gochecknoglobals
 
 func main() {

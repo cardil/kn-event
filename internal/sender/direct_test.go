@@ -33,9 +33,7 @@ func TestDirectSenderSend(t *testing.T) {
 					return
 				}
 				validateErr := func(err error) {
-					if err != nil {
-						unexpectedError(t, err)
-					}
+					unexpectedError(t, err)
 				}
 				if tt.validateErr != nil {
 					validateErr = tt.validateErr
@@ -85,7 +83,9 @@ func undelivered(t *testing.T) testCase {
 
 func unexpectedError(t *testing.T, err error) {
 	t.Helper()
-	t.Error("Send(): unexpected error: ", err)
+	if err != nil {
+		t.Error("Send(): unexpected error: ", err)
+	}
 }
 
 func newEvent(id string) cloudevents.Event {

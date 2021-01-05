@@ -23,7 +23,7 @@ func (d *directSender) Send(ce cloudevents.Event) error {
 	// Send that Event.
 	err = c.Send(ctx, ce)
 	if !cloudevents.IsACK(err) {
-		return fmt.Errorf("%w: %v", ErrCouldntBeSent, err)
+		return fmt.Errorf("%v: %w", ErrCouldntBeSent, err)
 	}
 
 	return nil
