@@ -16,7 +16,7 @@ var (
 	// ErrUseToURLOrToFlagIsRequired will be raised if user didn't used --to or
 	// --to-url flags.
 	ErrUseToURLOrToFlagIsRequired = errors.New("use --to or --to-url flag is required")
-	// ErrInvalidURLFormat will be raised if given URL is invalid
+	// ErrInvalidURLFormat will be raised if given URL is invalid.
 	ErrInvalidURLFormat = errors.New("invalid URL format")
 	// ErrInvalidToFormat will be raised if given addressable doesn't have valid
 	// expected format.

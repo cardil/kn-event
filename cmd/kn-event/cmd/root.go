@@ -6,6 +6,7 @@ import (
 
 	"github.com/cardil/kn-event/internal/cli"
 	"github.com/cardil/kn-event/internal/cli/retcode"
+	"github.com/cardil/kn-event/internal/event"
 	"github.com/spf13/cobra"
 	"github.com/thediveo/enumflag"
 )
@@ -64,7 +65,7 @@ func init() {
 		"kn configuration file",
 	)
 	rootCmd.PersistentFlags().StringVar(
-		&options.Kubeconfig, "kubeconfig", "~/.kube/config",
+		&options.Kubeconfig, "kubeconfig", event.DefaultKubeconfig,
 		"kubectl configuration file",
 	)
 	rootCmd.PersistentFlags().BoolVar(

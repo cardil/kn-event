@@ -45,13 +45,13 @@ type testPresentWithCase struct {
 
 func caseForPresentWithHumanReadable(t *testing.T) testPresentWithCase {
 	return testPresentWithCase{
-	name: "OutputMode==HumanReadable",
+		name: "OutputMode==HumanReadable",
 		args: testPresentWithCaseArgs{
 			ce:   exampleEvent(t),
 			mode: cli.HumanReadable,
 		},
-			wantErr: nil,
-			want: fmt.Sprintf(`☁️  cloudevents.Event
+		wantErr: nil,
+		want: fmt.Sprintf(`☁️  cloudevents.Event
 Validation: valid
 Context Attributes,
   specversion: 1.0
@@ -69,7 +69,7 @@ Data,
     },
     "ping": 123,
     "ref": "321"
-  }`, event.DefaultSource),
+  }`, event.DefaultSource()),
 	}
 }
 
@@ -97,7 +97,7 @@ func caseForPresentWithJSON(t *testing.T) testPresentWithCase {
   "specversion": "1.0",
   "time": "2020-08-24T14:01:12.000601161Z",
   "type": "dev.knative.cli.plugin.event.generic"
-}`, event.DefaultSource),
+}`, event.DefaultSource()),
 	}
 }
 
@@ -122,7 +122,7 @@ source: %s
 specversion: "1.0"
 time: "2020-08-24T14:01:12.000601161Z"
 type: dev.knative.cli.plugin.event.generic
-`, event.DefaultSource),
+`, event.DefaultSource()),
 	}
 }
 

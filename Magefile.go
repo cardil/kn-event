@@ -8,18 +8,19 @@ import (
 
 	"github.com/cardil/kn-event/internal"
 	"github.com/joho/godotenv"
-	"github.com/wavesoftware/go-magetasks/pkg/checks"
 
 	// mage:import
 	"github.com/wavesoftware/go-magetasks"
 	"github.com/wavesoftware/go-magetasks/config"
+
 	// mage:import
 	_ "github.com/wavesoftware/go-magetasks/container"
+	"github.com/wavesoftware/go-magetasks/pkg/checks"
 )
 
 // Default target is set to binary.
 //goland:noinspection GoUnusedGlobalVariable
-var Default = magetasks.Binary
+var Default = magetasks.Binary // nolint:deadcode,gochecknoglobals,unused
 
 func init() { //nolint:gochecknoinits
 	err := godotenv.Load()

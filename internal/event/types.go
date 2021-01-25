@@ -12,6 +12,9 @@ import (
 // ErrNotYetImplemented is an error for not yet implemented code.
 var ErrNotYetImplemented = errors.New("not yet implemented")
 
+// DefaultKubeconfig is a default location of kubeconfig.
+const DefaultKubeconfig = "~/.kube/config"
+
 // Spec holds specification of event to be created.
 type Spec struct {
 	Type   string
