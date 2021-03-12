@@ -11,15 +11,15 @@ import (
 
 // SendFromEnv will send an event based on a values stored in environmental
 // variables.
-func SendFromEnv() error {
-	c, err := configure()
+func (app *App) SendFromEnv() error {
+	c, err := app.configure()
 	if err != nil {
 		return err
 	}
 	return c.sender.Send(*c.ce)
 }
 
-func configure() (config, error) {
+func (app *App) configure() (config, error) {
 	args := &Args{
 		Sink: "localhost",
 	}
@@ -35,7 +35,7 @@ func configure() (config, error) {
 		Type:   event.TargetTypeReachable,
 		URLVal: u,
 	}
-	s, err := event.SenderFactory(target)
+	s, err := app.Binding.CreateSender(target)
 	if err != nil {
 		return config{}, fmt.Errorf("%w: %v", ErrCantConfigureICS, err)
 	}

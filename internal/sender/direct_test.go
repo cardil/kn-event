@@ -24,7 +24,8 @@ func TestDirectSenderSend(t *testing.T) {
 		tt := testsCases[i]
 		t.Run(tt.name, func(t *testing.T) {
 			tt.context(func(u url.URL) {
-				s, err := sender.New(&event.Target{
+				binding := sender.Binding{}
+				s, err := binding.New(&event.Target{
 					Type:   event.TargetTypeReachable,
 					URLVal: &u,
 				})

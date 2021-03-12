@@ -22,22 +22,21 @@ func TestSendingAnEvent(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			withSenderFactory(tt.senderFactory, func() {
-				s, err := event.NewSender(tt.target, tt.props)
-				if err != nil {
-					if !errors.Is(err, tt.want) {
-						t.Errorf("want: %#v\n got: %#v", tt.want, err)
-					}
-					return
+			binding := event.Binding{CreateSender: tt.CreateSender}
+			s, err := binding.NewSender(tt.target)
+			if err != nil {
+				if !errors.Is(err, tt.want) {
+					t.Errorf("want: %#v\n got: %#v", tt.want, err)
 				}
-				got := s.Send(tt.ce)
-				if !errors.Is(got, tt.want) {
-					t.Errorf("want: %#v\n got: %#v", tt.want, got)
-				}
-				if tt.bufTest != nil {
-					tt.bufTest(t)
-				}
-			})
+				return
+			}
+			got := s.Send(tt.ce)
+			if !errors.Is(got, tt.want) {
+				t.Errorf("want: %#v\n got: %#v", tt.want, got)
+			}
+			if tt.bufTest != nil {
+				tt.bufTest(t)
+			}
 		})
 	}
 }
@@ -56,9 +55,9 @@ func passingCase() testCase {
 		bufTest: func(t *testing.T) {
 			assert.Contains(t, buf.String(), "Event (ID: 123456) have been sent.")
 		},
-		name:          "passing",
-		senderFactory: stubSenderFactory,
-		ce:            ce,
+		name:         "passing",
+		ce:           ce,
+		CreateSender: stubSenderFactory,
 	}
 }
 
@@ -73,7 +72,7 @@ func failingSend() testCase {
 	return testCase{
 		name: "failingSend",
 		want: errTestError,
-		senderFactory: func(target *event.Target) (event.Sender, error) {
+		CreateSender: func(target *event.Target) (event.Sender, error) {
 			return nil, errTestError
 		},
 	}
@@ -89,28 +88,12 @@ var stubSenderFactory = func(*event.Target) (event.Sender, error) {
 	return &stubSender{}, nil
 }
 
-func withSenderFactory(
-	senderFactory func(*event.Target) (event.Sender, error),
-	body func(),
-) {
-	if senderFactory == nil {
-		body()
-		return
-	}
-	old := event.SenderFactory
-	defer func() {
-		event.SenderFactory = old
-	}()
-	event.SenderFactory = senderFactory
-	body()
-}
-
 type testCase struct {
-	name          string
-	bufTest       func(t *testing.T)
-	target        *event.Target
-	props         *event.Properties
-	senderFactory func(*event.Target) (event.Sender, error)
-	ce            cloudevents.Event
-	want          error
+	name    string
+	bufTest func(t *testing.T)
+	target  *event.Target
+	props   *event.Properties
+	ce      cloudevents.Event
+	want    error
+	event.CreateSender
 }

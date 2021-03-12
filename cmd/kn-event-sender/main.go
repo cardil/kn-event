@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/cardil/kn-event/internal/cli/ics"
 	"github.com/cardil/kn-event/internal/cli/retcode"
 	"github.com/cardil/kn-event/internal/configuration"
 )
@@ -13,8 +12,8 @@ import (
 var ExitFunc = os.Exit // nolint:gochecknoglobals
 
 func main() {
-	configuration.ConfigureSender()
-	if err := ics.SendFromEnv(); err != nil {
+	app := configuration.CreateIcs()
+	if err := app.SendFromEnv(); err != nil {
 		_, _ = fmt.Fprint(os.Stderr, err)
 		ExitFunc(retcode.Calc(err))
 	}

@@ -7,6 +7,8 @@ import (
 	"regexp"
 
 	"github.com/cardil/kn-event/internal/event"
+	clientutil "knative.dev/client/pkg/util"
+	"knative.dev/pkg/apis"
 )
 
 var (
@@ -26,7 +28,7 @@ var (
 		"a label selector")
 )
 
-// ValidateTarget will perform validation on CLI element of target.
+// ValidateTarget will perform validation on App element of target.
 func ValidateTarget(args *TargetArgs) error {
 	if args.URL == "" && args.Addressable == "" {
 		return ErrUseToURLOrToFlagIsRequired
@@ -54,15 +56,35 @@ func ValidateTarget(args *TargetArgs) error {
 	return nil
 }
 
-func createTarget(args *TargetArgs) (*event.Target, error) {
+func createTarget(args *TargetArgs, props *event.Properties) (*event.Target, error) {
+	if args.Addressable != "" {
+		ref, err := clientutil.ToTrackerReference(args.Addressable, args.Namespace)
+		if err != nil {
+			return nil, err
+		}
+		uri, err := apis.ParseURL(args.AddressableURI)
+		if err != nil {
+			return nil, err
+		}
+		return &event.Target{
+			Type: event.TargetTypeAddressable,
+			AddressableVal: &event.AddressableSpec{
+				Reference:       ref,
+				URI:             uri,
+				SenderNamespace: args.SenderNamespace,
+			},
+			Properties: props,
+		}, nil
+	}
 	if args.URL != "" {
 		u, err := url.Parse(args.URL)
 		if err != nil {
 			return nil, err
 		}
 		return &event.Target{
-			Type:   event.TargetTypeReachable,
-			URLVal: u,
+			Type:       event.TargetTypeReachable,
+			URLVal:     u,
+			Properties: props,
 		}, nil
 	}
 	return nil, event.ErrNotYetImplemented

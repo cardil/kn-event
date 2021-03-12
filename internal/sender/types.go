@@ -2,6 +2,9 @@ package sender
 
 import (
 	"errors"
+
+	"github.com/cardil/kn-event/internal/event"
+	"github.com/cardil/kn-event/internal/k8s"
 )
 
 var (
@@ -13,3 +16,11 @@ var (
 	// to be sent, couldn't be, for whatever technical reason.
 	ErrCouldntBeSent = errors.New("event couldn't be sent")
 )
+
+// CreateJobRunner creates a k8s.JobRunner.
+type CreateJobRunner func(props *event.Properties) (k8s.JobRunner, error)
+
+// Binding holds injectable dependencies.
+type Binding struct {
+	CreateJobRunner
+}

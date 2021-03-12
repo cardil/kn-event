@@ -20,7 +20,8 @@ func TestPresentWith(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			actual, err := cli.PresentWith(tt.args.ce, tt.args.mode)
+			app := cli.App{}
+			actual, err := app.PresentWith(tt.args.ce, tt.args.mode)
 			if !errors.Is(err, tt.wantErr) {
 				t.Errorf("PresentWith():\n   error = %#v\n wantErr = %#v", err, tt.wantErr)
 			}
@@ -142,7 +143,8 @@ func TestCreateWithArgs(t *testing.T) {
 		},
 		RawFields: []string{"ref=321"},
 	}
-	actual, err := cli.CreateWithArgs(args)
+	app := cli.App{}
+	actual, err := app.CreateWithArgs(args)
 	assert.NoError(t, err)
 	assert.Equal(t, eventType, actual.Type())
 	assert.Equal(t, id, actual.ID())

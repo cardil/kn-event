@@ -35,6 +35,8 @@ func init() { //nolint:gochecknoinits
 		config.Binaries = append(config.Binaries, config.Binary{Name: bin})
 	}
 	config.VersionVariablePath = "github.com/cardil/kn-event/internal.Version"
-	checks.Revive()
-	checks.Staticcheck()
+	checks.GolangCiLintWithOptions(checks.GolangCiLintOptions{
+		New: true,
+		Fix: true,
+	})
 }

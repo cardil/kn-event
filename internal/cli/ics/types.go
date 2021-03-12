@@ -1,6 +1,10 @@
 package ics
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/cardil/kn-event/internal/event"
+)
 
 var (
 	// ErrCouldntEncode is returned when problem occur while trying to encode an
@@ -19,4 +23,9 @@ type Args struct {
 	Sink        string
 	CeOverrides string
 	Event       string
+}
+
+// App holds an ICS app binding.
+type App struct {
+	event.Binding
 }

@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/cardil/kn-event/internal/cli"
+	"github.com/cardil/kn-event/internal/event"
 	"github.com/cardil/kn-event/internal/tests"
 	cloudevents "github.com/cloudevents/sdk-go/v2"
 	"github.com/stretchr/testify/assert"
@@ -34,16 +35,21 @@ func assertWithOutputMode(t *testing.T, want cloudevents.Event, mode cli.OutputM
 	t.Helper()
 	var buf bytes.Buffer
 	sender := &tests.Sender{}
-	err := tests.WithSender(sender, func() error {
-		return cli.Send(
-			want,
-			&cli.TargetArgs{URL: "http://example.org"},
-			&cli.OptionsArgs{
-				Output:    mode,
-				OutWriter: &buf,
+	app := cli.App{
+		Binding: event.Binding{
+			CreateSender: func(target *event.Target) (event.Sender, error) {
+				return sender, nil
 			},
-		)
-	})
+		},
+	}
+	err := app.Send(
+		want,
+		&cli.TargetArgs{URL: "http://example.org"},
+		&cli.OptionsArgs{
+			Output:    mode,
+			OutWriter: &buf,
+		},
+	)
 	assert.NoError(t, err)
 	out := buf.String()
 	assert.Equal(t, 1, len(sender.Sent))
