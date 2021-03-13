@@ -20,6 +20,7 @@ func main() {
 }
 
 // TestMain is used by tests.
-func TestMain() { //nolint:unused
+//goland:noinspection GoUnusedExportedFunction
+func TestMain() { //nolint:deadcode
 	main()
 }
