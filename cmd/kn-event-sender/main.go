@@ -18,3 +18,8 @@ func main() {
 		ExitFunc(retcode.Calc(err))
 	}
 }
+
+// TestMain is used by tests.
+func TestMain() { //nolint:unused
+	main()
+}

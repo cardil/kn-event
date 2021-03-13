@@ -1,4 +1,4 @@
-package main
+package main_test
 
 import (
 	"net/url"
@@ -9,6 +9,8 @@ import (
 	"github.com/cardil/kn-event/internal/tests"
 	cloudevents "github.com/cloudevents/sdk-go/v2"
 	"github.com/stretchr/testify/assert"
+
+	kes "github.com/cardil/kn-event/cmd/kn-event-sender"
 )
 
 func TestMainSender(t *testing.T) {
@@ -26,7 +28,7 @@ func TestMainSender(t *testing.T) {
 			"K_EVENT": kevent,
 		}
 		return tests.WithEnviron(env, func() error {
-			main()
+			kes.TestMain()
 			return nil
 		})
 	})
