@@ -1,14 +1,7 @@
 package event
 
 import (
-	"errors"
-
 	cloudevents "github.com/cloudevents/sdk-go/v2"
-)
-
-var (
-	// ErrSenderFactoryUnset will be returned if sender factory isnt set.
-	ErrSenderFactoryUnset = errors.New("sender factory is not set")
 )
 
 // NewSender will create a sender that can send event to cluster.

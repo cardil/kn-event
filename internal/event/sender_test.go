@@ -17,10 +17,10 @@ var errTestError = errors.New("test error")
 func TestSendingAnEvent(t *testing.T) {
 	tests := []testCase{
 		passingCase(),
-		unconfiguredBinding(),
 		failingSend(),
 	}
-	for _, tt := range tests {
+	for i := range tests {
+		tt := tests[i]
 		t.Run(tt.name, func(t *testing.T) {
 			binding := event.Binding{CreateSender: tt.CreateSender}
 			s, err := binding.NewSender(tt.target)
@@ -48,23 +48,20 @@ func passingCase() testCase {
 	log := zap.New(zapcore.NewCore(enc, &buf, cfg.Level))
 	ce := cloudevents.NewEvent("1.0")
 	ce.SetID("123456")
-	return testCase{
-		props: &event.Properties{
+	target := &event.Target{
+		Properties: &event.Properties{
 			Log: log.Sugar(),
 		},
+	}
+	return testCase{
 		bufTest: func(t *testing.T) {
+			t.Helper()
 			assert.Contains(t, buf.String(), "Event (ID: 123456) have been sent.")
 		},
 		name:         "passing",
 		ce:           ce,
 		CreateSender: stubSenderFactory,
-	}
-}
-
-func unconfiguredBinding() testCase {
-	return testCase{
-		name: "unconfiguredBinding",
-		want: event.ErrSenderFactoryUnset,
+		target:       target,
 	}
 }
 
@@ -84,7 +81,7 @@ func (m *stubSender) Send(_ cloudevents.Event) error {
 	return nil
 }
 
-var stubSenderFactory = func(*event.Target) (event.Sender, error) {
+func stubSenderFactory(*event.Target) (event.Sender, error) {
 	return &stubSender{}, nil
 }
 
@@ -92,7 +89,6 @@ type testCase struct {
 	name    string
 	bufTest func(t *testing.T)
 	target  *event.Target
-	props   *event.Properties
 	ce      cloudevents.Event
 	want    error
 	event.CreateSender
