@@ -18,7 +18,8 @@ func TestPresentWith(t *testing.T) {
 		caseForPresentWithJSON(t),
 		caseForPresentWithYAML(t),
 	}
-	for _, tt := range tests {
+	for i := range tests {
+		tt := tests[i]
 		t.Run(tt.name, func(t *testing.T) {
 			app := cli.App{}
 			actual, err := app.PresentWith(tt.args.ce, tt.args.mode)

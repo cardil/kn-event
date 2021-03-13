@@ -1,6 +1,9 @@
 package tests
 
-import "os"
+import (
+	"fmt"
+	"os"
+)
 
 // WithEnviron will execute a block of code with temporal environment set.
 func WithEnviron(env map[string]string, body func() error) error {
@@ -15,7 +18,7 @@ func WithEnviron(env map[string]string, body func() error) error {
 	for k, v := range env {
 		err := os.Setenv(k, v)
 		if err != nil {
-			return err
+			return fmt.Errorf("can't set env %v=%v: %w", k, v, err)
 		}
 	}
 	defer func() {

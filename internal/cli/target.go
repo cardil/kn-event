@@ -60,11 +60,11 @@ func createTarget(args *TargetArgs, props *event.Properties) (*event.Target, err
 	if args.Addressable != "" {
 		ref, err := clientutil.ToTrackerReference(args.Addressable, args.Namespace)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: %s", ErrInvalidToFormat, err.Error())
 		}
 		uri, err := apis.ParseURL(args.AddressableURI)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("--addressable-uri %w: %s", ErrInvalidURLFormat, err.Error())
 		}
 		return &event.Target{
 			Type: event.TargetTypeAddressable,
@@ -79,7 +79,7 @@ func createTarget(args *TargetArgs, props *event.Properties) (*event.Target, err
 	if args.URL != "" {
 		u, err := url.Parse(args.URL)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("--to-url %w: %s", ErrInvalidURLFormat, err.Error())
 		}
 		return &event.Target{
 			Type:       event.TargetTypeReachable,

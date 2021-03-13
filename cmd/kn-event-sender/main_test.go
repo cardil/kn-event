@@ -5,12 +5,11 @@ import (
 	"testing"
 	"time"
 
+	kes "github.com/cardil/kn-event/cmd/kn-event-sender"
 	"github.com/cardil/kn-event/internal/cli/ics"
 	"github.com/cardil/kn-event/internal/tests"
 	cloudevents "github.com/cloudevents/sdk-go/v2"
 	"github.com/stretchr/testify/assert"
-
-	kes "github.com/cardil/kn-event/cmd/kn-event-sender"
 )
 
 func TestMainSender(t *testing.T) {
