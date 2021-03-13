@@ -20,11 +20,10 @@ import (
 
 // Default target is set to binary.
 //goland:noinspection GoUnusedGlobalVariable
-var Default = magetasks.Binary // nolint:deadcode,gochecknoglobals,unused
+var Default = magetasks.Binary // nolint:deadcode,gochecknoglobals
 
 func init() { //nolint:gochecknoinits
-	err := godotenv.Load()
-	if err != nil {
+	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file", err)
 	}
 	bins := []string{
