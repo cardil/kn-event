@@ -17,14 +17,18 @@ var (
 	ErrCouldntBeSent = errors.New("event couldn't be sent")
 )
 
+// CreateKubeClients creates k8s.Clients.
+type CreateKubeClients func(props *event.Properties) (k8s.Clients, error)
+
 // CreateJobRunner creates a k8s.JobRunner.
-type CreateJobRunner func(props *event.Properties) (k8s.JobRunner, error)
+type CreateJobRunner func(kube k8s.Clients) k8s.JobRunner
 
 // CreateAddressResolver creates a k8s.ReferenceAddressResolver.
-type CreateAddressResolver func(props *event.Properties) (k8s.ReferenceAddressResolver, error)
+type CreateAddressResolver func(kube k8s.Clients) k8s.ReferenceAddressResolver
 
 // Binding holds injectable dependencies.
 type Binding struct {
 	CreateJobRunner
 	CreateAddressResolver
+	CreateKubeClients
 }

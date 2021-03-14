@@ -20,7 +20,9 @@ type inClusterSender struct {
 }
 
 func (i *inClusterSender) Send(ce cloudevents.Event) error {
-	url, err := i.addressResolver.ResolveAddress(i.addressable.Reference)
+	url, err := i.addressResolver.ResolveAddress(
+		i.addressable.Reference, i.addressable.URI,
+	)
 	if err != nil {
 		return fmt.Errorf("%w: %v", k8s.ErrInvalidReference, err)
 	}

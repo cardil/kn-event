@@ -11,6 +11,7 @@ import (
 	"github.com/cardil/kn-event/internal/event"
 	"github.com/cardil/kn-event/internal/k8s"
 	"github.com/cardil/kn-event/internal/sender"
+	"github.com/cardil/kn-event/internal/tests"
 	cloudevents "github.com/cloudevents/sdk-go/v2"
 	"github.com/stretchr/testify/assert"
 	batchv1 "k8s.io/api/batch/v1"
@@ -22,20 +23,24 @@ import (
 var errExampleValidationFault = errors.New("example validation fault")
 
 func TestInClusterSenderSend(t *testing.T) {
-	tests := []testcase{
+	testCases := []inClusterTestCase{
 		passingInClusterSenderSend(t),
 		couldResolveAddress(t),
 	}
-	for i := range tests {
-		tt := tests[i]
+	for i := range testCases {
+		tt := testCases[i]
 		t.Run(tt.name, func(t *testing.T) {
-			createJobRunner := func(props *event.Properties) (k8s.JobRunner, error) {
-				return tt.fields.jobRunner, nil
+			createKubeClient := func(_ *event.Properties) (k8s.Clients, error) {
+				return &tests.FakeClients{}, nil
 			}
-			createAddressResolver := func(props *event.Properties) (k8s.ReferenceAddressResolver, error) {
-				return tt.fields.addressResolver, nil
+			createJobRunner := func(_ k8s.Clients) k8s.JobRunner {
+				return tt.fields.jobRunner
+			}
+			createAddressResolver := func(_ k8s.Clients) k8s.ReferenceAddressResolver {
+				return tt.fields.addressResolver
 			}
 			binding := sender.Binding{
+				CreateKubeClients:     createKubeClient,
 				CreateJobRunner:       createJobRunner,
 				CreateAddressResolver: createAddressResolver,
 			}
@@ -51,9 +56,9 @@ func TestInClusterSenderSend(t *testing.T) {
 	}
 }
 
-func passingInClusterSenderSend(t *testing.T) testcase {
+func passingInClusterSenderSend(t *testing.T) inClusterTestCase {
 	t.Helper()
-	return testcase{
+	return inClusterTestCase{
 		name: "passing",
 		fields: fields{
 			addressable: exampleBrokerAddressableSpec(t),
@@ -79,13 +84,13 @@ func passingInClusterSenderSend(t *testing.T) testcase {
 	}
 }
 
-func couldResolveAddress(t *testing.T) testcase {
+func couldResolveAddress(t *testing.T) inClusterTestCase {
 	t.Helper()
 	ar := stubAddressResolver()
 	ar.isValid = func(ref *tracker.Reference) error {
 		return errExampleValidationFault
 	}
-	return testcase{
+	return inClusterTestCase{
 		name: "couldResolveAddress",
 		fields: fields{
 			addressable:     exampleBrokerAddressableSpec(t),
@@ -125,7 +130,7 @@ type ar struct {
 	isValid func(ref *tracker.Reference) error
 }
 
-func (a *ar) ResolveAddress(ref *tracker.Reference) (*url.URL, error) {
+func (a *ar) ResolveAddress(ref *tracker.Reference, uri *apis.URL) (*url.URL, error) {
 	if a.isValid != nil {
 		if err := a.isValid(ref); err != nil {
 			return nil, err
@@ -198,7 +203,7 @@ type args struct {
 	ce cloudevents.Event
 }
 
-type testcase struct {
+type inClusterTestCase struct {
 	name   string
 	fields fields
 	args   args

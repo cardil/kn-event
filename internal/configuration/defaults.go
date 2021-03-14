@@ -8,6 +8,7 @@ import (
 
 func senderBinding() sender.Binding {
 	return sender.Binding{
+		CreateKubeClients:     k8s.CreateKubeClient,
 		CreateJobRunner:       k8s.CreateJobRunner,
 		CreateAddressResolver: k8s.CreateAddressResolver,
 	}
