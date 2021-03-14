@@ -14,4 +14,7 @@ var (
 
 	// ErrMoreThenOneFound if more then one resource has been found.
 	ErrMoreThenOneFound = errors.New("more then one resource has been found")
+
+	// ErrUnexcpected if something unexpected actually has happened.
+	ErrUnexcpected = errors.New("something unexpected actually has happened")
 )

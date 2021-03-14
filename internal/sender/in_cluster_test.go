@@ -62,7 +62,7 @@ func passingInClusterSenderSend(t *testing.T) inClusterTestCase {
 		name: "passing",
 		fields: fields{
 			addressable: exampleBrokerAddressableSpec(t),
-			jobRunner: stubJobRunner(func(job batchv1.Job) bool {
+			jobRunner: stubJobRunner(func(job *batchv1.Job) bool {
 				if sink, ok := envof(job.Spec.Template.Spec.Containers[0].Env, "K_SINK"); ok {
 					if sink != "default.demo.broker.eventing.dev.cluster.local" {
 						return false
@@ -95,7 +95,7 @@ func couldResolveAddress(t *testing.T) inClusterTestCase {
 		fields: fields{
 			addressable:     exampleBrokerAddressableSpec(t),
 			addressResolver: ar,
-			jobRunner: stubJobRunner(func(job batchv1.Job) bool {
+			jobRunner: stubJobRunner(func(job *batchv1.Job) bool {
 				return true
 			}),
 		},
@@ -116,10 +116,10 @@ func envof(envs []corev1.EnvVar, name string) (string, bool) {
 }
 
 type jr struct {
-	isValid func(job batchv1.Job) bool
+	isValid func(job *batchv1.Job) bool
 }
 
-func (j *jr) Run(job batchv1.Job) error {
+func (j *jr) Run(job *batchv1.Job) error {
 	if !j.isValid(job) {
 		return sender.ErrCouldntBeSent
 	}
@@ -144,7 +144,7 @@ func (a *ar) ResolveAddress(ref *tracker.Reference, uri *apis.URL) (*url.URL, er
 	return u, nil
 }
 
-func stubJobRunner(isValid func(job batchv1.Job) bool) *jr {
+func stubJobRunner(isValid func(job *batchv1.Job) bool) *jr {
 	return &jr{isValid: isValid}
 }
 

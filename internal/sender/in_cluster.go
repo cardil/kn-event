@@ -30,7 +30,7 @@ func (i *inClusterSender) Send(ce cloudevents.Event) error {
 	if err != nil {
 		return fmt.Errorf("%w: %v", ics.ErrCouldntEncode, err)
 	}
-	job := batchv1.Job{
+	job := &batchv1.Job{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      fmt.Sprintf("kn-event-sender-%s", ce.ID()),
 			Namespace: i.addressable.SenderNamespace,
