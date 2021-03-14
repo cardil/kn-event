@@ -8,7 +8,8 @@ import (
 
 func senderBinding() sender.Binding {
 	return sender.Binding{
-		CreateJobRunner: k8s.CreateJobRunner,
+		CreateJobRunner:       k8s.CreateJobRunner,
+		CreateAddressResolver: k8s.CreateAddressResolver,
 	}
 }
 

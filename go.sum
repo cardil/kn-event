@@ -704,8 +704,6 @@ github.com/vektah/gqlparser v1.1.2/go.mod h1:1ycwN7Ij5njmMkPPAOaRFY4rET2Enx7IkVv
 github.com/vmware/govmomi v0.20.3/go.mod h1:URlwyTFZX72RmxtxuaFL2Uj3fD1JTvZdx59bHWk6aFU=
 github.com/wavesoftware/go-ensure v1.0.0 h1:6X3gQL5psBWwtu/H9a+69xQ+JGTUELaLhgOB/iB3AQk=
 github.com/wavesoftware/go-ensure v1.0.0/go.mod h1:K2UAFSwMTvpiRGay/M3aEYYuurcR8S4A6HkQlJPV8k4=
-github.com/wavesoftware/go-magetasks v0.4.2 h1:+wdWzV9o67AocwbRsiEZ1HwCN0zN0HuCNc+08PwsmX0=
-github.com/wavesoftware/go-magetasks v0.4.2/go.mod h1:gCZyZF3Tr0vX1lxj3BtHp1n76ZSnpd1m2j6QVCQxrHQ=
 github.com/wavesoftware/go-magetasks v0.4.3 h1:HDzJbMe2QBNYLrOUmI64V5dZAQajd0KIQ+PkZqRfkSw=
 github.com/wavesoftware/go-magetasks v0.4.3/go.mod h1:gCZyZF3Tr0vX1lxj3BtHp1n76ZSnpd1m2j6QVCQxrHQ=
 github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q53MR2AWcXfiuqkDkRtnGDLqkBTpCHuJHxtU=

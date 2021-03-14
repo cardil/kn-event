@@ -87,5 +87,5 @@ func createTarget(args *TargetArgs, props *event.Properties) (*event.Target, err
 			Properties: props,
 		}, nil
 	}
-	return nil, event.ErrNotYetImplemented
+	return nil, ErrUseToURLOrToFlagIsRequired
 }

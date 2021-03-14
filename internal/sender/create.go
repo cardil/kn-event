@@ -18,9 +18,14 @@ func (b *Binding) New(target *event.Target) (event.Sender, error) {
 		if err != nil {
 			return nil, err
 		}
+		ar, err := b.CreateAddressResolver(target.Properties)
+		if err != nil {
+			return nil, err
+		}
 		return &inClusterSender{
-			addressable: target.AddressableVal,
-			jobRunner:   jr,
+			addressable:     target.AddressableVal,
+			jobRunner:       jr,
+			addressResolver: ar,
 		}, nil
 	}
 	return nil, fmt.Errorf("%w: %v", ErrUnsupportedTargetType, target.Type)

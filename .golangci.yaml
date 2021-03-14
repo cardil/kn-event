@@ -17,3 +17,4 @@ linters:
     - nlreturn
     - exhaustivestruct
     - wsl
+    - godox

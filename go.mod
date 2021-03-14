@@ -20,6 +20,7 @@ require (
 	go.uber.org/zap v1.16.0
 	gopkg.in/yaml.v2 v2.4.0
 	k8s.io/api v0.19.7
+	k8s.io/apimachinery v0.19.7
 	knative.dev/client v0.21.0
 	knative.dev/pkg v0.0.0-20210216013737-584933f8280b
 )

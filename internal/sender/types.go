@@ -20,7 +20,11 @@ var (
 // CreateJobRunner creates a k8s.JobRunner.
 type CreateJobRunner func(props *event.Properties) (k8s.JobRunner, error)
 
+// CreateAddressResolver creates a k8s.ReferenceAddressResolver.
+type CreateAddressResolver func(props *event.Properties) (k8s.ReferenceAddressResolver, error)
+
 // Binding holds injectable dependencies.
 type Binding struct {
 	CreateJobRunner
+	CreateAddressResolver
 }
