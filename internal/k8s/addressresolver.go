@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/url"
 
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -111,8 +110,8 @@ func (a *addressResolver) toGVR(ref *tracker.Reference) (schema.GroupVersionReso
 }
 
 func (a *addressResolver) toAddressable(un *unstructured.Unstructured) (*duckv1.Addressable, error) {
-	svc := corev1.Service{}
-	if un.GroupVersionKind() == svc.GroupVersionKind() {
+	gvk := un.GroupVersionKind()
+	if gvk.Version == "v1" && gvk.Kind == "Service" && gvk.Group == "" {
 		return &duckv1.Addressable{
 			URL: apis.HTTP(fmt.Sprintf("%s.%s.svc", un.GetName(), un.GetNamespace())),
 		}, nil

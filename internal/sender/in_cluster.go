@@ -41,7 +41,9 @@ func (i *inClusterSender) Send(ce cloudevents.Event) error {
 		Spec: batchv1.JobSpec{
 			Template: corev1.PodTemplateSpec{
 				Spec: corev1.PodSpec{
+					RestartPolicy: corev1.RestartPolicyNever,
 					Containers: []corev1.Container{{
+						Name:  "kn-event-sender",
 						Image: imageFor("kn-event-sender"),
 						Env: []corev1.EnvVar{{
 							Name:  "K_SINK",
