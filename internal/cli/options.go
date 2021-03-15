@@ -15,7 +15,7 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-// WithLogger will create an event suitable OptionsArgs from App ones.
+// WithLogger will create an event suitable OptionsArgs from CLI ones.
 func (opts *OptionsArgs) WithLogger() *event.Properties {
 	zc := zap.NewProductionConfig()
 	cfg := zap.NewProductionEncoderConfig()

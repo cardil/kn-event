@@ -68,6 +68,7 @@ func createTarget(args *TargetArgs, props *event.Properties) (*event.Target, err
 		}
 		return &event.Target{
 			Type: event.TargetTypeAddressable,
+			// FIXME: .Reference.Namespace and .SenderNamespace needs to be filled in if they eql ""
 			AddressableVal: &event.AddressableSpec{
 				Reference:       ref,
 				URI:             uri,

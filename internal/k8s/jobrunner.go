@@ -40,6 +40,7 @@ func (j *jobRunner) Run(job *batchv1.Job) error {
 			options.FieldSelector = fmt.Sprintf("metadata.name=%s", job.Name)
 		}),
 	)
+	// FIXME: This function do not wait properly for the end of the Job
 	stop := make(chan struct{})
 	jobsInformer := factory.Batch().V1().Jobs().Informer()
 	jobsInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
