@@ -1,4 +1,8 @@
 = Knative CLI (kn) plugin for managing events
 
+> *This code is in the process of being donated to https://knative.dev[Knative project].*
+>
+> New home for it is https://github.com/knative-sandbox/kn-plugin-event
+
 This is a plugin for Knative CLI, that adds capability to handle events from
 command line.
