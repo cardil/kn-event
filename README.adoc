@@ -1,6 +1,6 @@
 = Knative CLI (kn) plugin for managing events
 
-> *This code is in the process of being donated to https://knative.dev[Knative project].*
+> *This code has been donated to https://knative.dev[Knative project].*
 >
 > New home for it is https://github.com/knative-sandbox/kn-plugin-event
 
